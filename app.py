@@ -1,4 +1,4 @@
-import tensorflow as tf
+import torch
 from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer
 
@@ -13,12 +13,12 @@ class SimilarityCalculator:
         return embeddings
     
     def cosine_similarity_normalized(self, embeddings1, embeddings2):
-        dot_product = tf.reduce_sum(embeddings1 * embeddings2, axis=1)
-        norm_embeddings1 = tf.norm(embeddings1, axis=1)
-        norm_embeddings2 = tf.norm(embeddings2, axis=1)
+        dot_product = torch.sum(embeddings1 * embeddings2, dim=1)
+        norm_embeddings1 = torch.norm(embeddings1, dim=1)
+        norm_embeddings2 = torch.norm(embeddings2, dim=1)
         cosine_similarity = dot_product / (norm_embeddings1 * norm_embeddings2)
         normalized_similarity = (cosine_similarity + 1) / 2
-        return normalized_similarity.numpy()
+        return normalized_similarity.cpu().numpy()
     
     def compute_normalized_similarity(self, text1_list, text2_list):
         embeddings1 = self.encode_sentences(text1_list)
@@ -47,4 +47,3 @@ def compute_similarity():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
