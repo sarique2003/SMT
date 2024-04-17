@@ -1,0 +1,6 @@
+runtime: python310  # Set the Python runtime version
+
+handlers:
+- url: /.*
+  script: auto
+
